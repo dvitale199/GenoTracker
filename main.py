@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import pandas as pd
 import os
 import logging
@@ -16,36 +16,34 @@ async def root():
 data = []
 
 class GeneticData(BaseModel):
-    study_code: str
-    monogenic_complex_mixed: str
-    city: str
-    geographic_locality: str
-    n_dna_samples_received_at_site: int
-    n_dna_samples_attempted: int
-    total_qc_pass: int
-    callrate_fails: int
-    sex_fails: int
-    het_fails: int
-    duplicates: int
-    related: int
-    AFR: int
-    AAC: int
-    AJ: int
-    EAS: int
-    EUR: int
-    FIN: int
-    AMR: int
-    SAS: int
-    CAS: int
-    MDE: int
-    CAH: int
-    total: int
-    genotyping_complete: bool
-    imputation_panel: str
-    imputation_complete: bool
-    genotypes_shareable: bool
-    gdpr: bool
-    site: str
+    study_code: Optional[str] = ''
+    monogenic_complex_mixed: Optional[str] = ''
+    city: Optional[str] = ''
+    geographic_locality: Optional[str] = ''
+    n_dna_samples_attempted: Optional[int] = 0
+    total_qc_pass: Optional[int] = 0
+    callrate_fails: Optional[int] = 0
+    sex_fails: Optional[int] = 0
+    het_fails: Optional[int] = 0
+    duplicates: Optional[int] = 0
+    AFR: Optional[int] = 0
+    AAC: Optional[int] = 0
+    AJ: Optional[int] = 0
+    EAS: Optional[int] = 0
+    EUR: Optional[int] = 0
+    FIN: Optional[int] = 0
+    AMR: Optional[int] = 0
+    SAS: Optional[int] = 0
+    CAS: Optional[int] = 0
+    MDE: Optional[int] = 0
+    CAH: Optional[int] = 0
+    total: Optional[int] = 0
+    genotyping_complete: Optional[bool] = False
+    imputation_panel: Optional[str] = ''
+    imputation_complete: Optional[bool] = False
+    genotypes_shareable: Optional[bool] = False
+    gdpr: Optional[bool] = False
+    site: Optional[str] = ''
 
 def read_csv() -> pd.DataFrame:
     if os.path.exists(CSV_FILE_PATH):
