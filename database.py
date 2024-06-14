@@ -11,8 +11,9 @@ Base = declarative_base()
 
 class GeneticData(Base):
     __tablename__ = "genetic_data"
-
-    study_code = Column(String, primary_key=True, index=True)
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    study_code = Column(String, index=True)
     monogenic_complex_mixed = Column(String)
     city = Column(String)
     geographic_locality = Column(String)
