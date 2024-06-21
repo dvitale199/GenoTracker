@@ -73,7 +73,8 @@ def load_data(file_path):
             cah_case=row.get('cah_case', 0),
             cah_control=row.get('cah_control', 0),
             cah_other=row.get('cah_other', 0),
-            total=row.get('total', 0)
+            total=row.get('total', 0),
+            new=True
         )
         session.add(genetic_data)
 

@@ -75,5 +75,6 @@ class GeneticData(Base):
     cah_control = Column(Integer, nullable=True)
     cah_other = Column(Integer, nullable=True)
     total = Column(Integer, nullable=True)
+    new = Column(Boolean, default=True)
 
 Base.metadata.create_all(bind=engine)
