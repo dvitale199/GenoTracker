@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
 
 DATABASE_URL = "sqlite:///./test.db"
 
@@ -9,8 +10,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-class GeneticData(Base):
-    __tablename__ = "genetic_data"
+class CohortData(Base):
+    __tablename__ = "cohort_data"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     study_code = Column(String, index=True)
@@ -76,5 +77,6 @@ class GeneticData(Base):
     cah_other = Column(Integer, nullable=True)
     total = Column(Integer, nullable=True)
     new = Column(Boolean, default=True)
+    date_last_update = Column(Date, default=datetime.today()) 
 
 Base.metadata.create_all(bind=engine)

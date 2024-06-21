@@ -1,6 +1,7 @@
 import pandas as pd
 from sqlalchemy.orm import Session
-from database import engine, GeneticData
+from database import engine, CohortData
+from crud import update_date_last_update
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
@@ -11,7 +12,7 @@ def load_data(file_path):
     session = Session(engine)
 
     for _, row in df.iterrows():
-        genetic_data = GeneticData(
+        genetic_data = CohortData(
             study_code=row.get('study_code', ''),
             monogenic_complex_mixed=row.get('monogenic_complex_mixed', ''),
             city=row.get('city', ''),
@@ -77,6 +78,7 @@ def load_data(file_path):
             new=True
         )
         session.add(genetic_data)
+        update_date_last_update(row['study_code'])
 
     session.commit()
     session.close()
