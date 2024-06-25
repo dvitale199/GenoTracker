@@ -29,7 +29,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 async def root():
     return "Welcome to GenoTracker"
 
-# Pydantic model for data serialization
 class CohortDataSchema(BaseModel):
     study_code: Optional[str] = ''
     monogenic_complex_mixed: Optional[str] = ''
