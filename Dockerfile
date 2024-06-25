@@ -2,8 +2,8 @@ FROM python:3.11
 LABEL maintainer="Dan Vitale <dan@datatecnica.com>"
 
 RUN apt-get update -y && \
-apt-get install python3-dev -y && \
-apt-get install libevent-dev
+    apt-get install python3-dev -y && \
+    apt-get install libevent-dev
 
 RUN adduser --disabled-password --gecos "" gtuser
 
@@ -20,4 +20,6 @@ COPY . /app
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+EXPOSE 8080
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

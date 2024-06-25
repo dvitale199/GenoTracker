@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from google.cloud import storage
 from sqlalchemy import create_engine
@@ -7,11 +8,12 @@ from typing import List, Optional
 from datetime import date
 import pandas as pd
 from load_data import CohortData
+
 app = FastAPI()
 
-BUCKET_NAME = 'genotracker'
-DB_FILE_NAME = 'database/test.db'
-LOCAL_DB_FILE_PATH = '/tmp/test.db'
+BUCKET_NAME = os.getenv('BUCKET_NAME', 'genotracker')
+DB_FILE_NAME = os.getenv('DB_FILE_NAME', 'database/test.db')
+LOCAL_DB_FILE_PATH = os.getenv('LOCAL_DB_FILE_PATH', '/tmp/test.db')
 
 def download_db_file():
     client = storage.Client()
@@ -95,8 +97,4 @@ async def get_all_data():
         return [CohortDataSchema.model_validate(item) for item in data]
     finally:
         session.close()
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
     

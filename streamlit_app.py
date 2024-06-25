@@ -4,7 +4,7 @@ import requests
 
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
-API_URL = "http://127.0.0.1:8000/data"
+API_URL = "https://genotracker-dot-gp2-release-terra.uc.r.appspot.com/data"
 
 @st.cache_data
 def fetch_data():
