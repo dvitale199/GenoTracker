@@ -1,11 +1,29 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from google.cloud import storage
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from sqlalchemy.orm import Session
-from database import engine, CohortData
 from datetime import date
-
+import pandas as pd
+from load_data import CohortData
 app = FastAPI()
+
+BUCKET_NAME = 'genotracker'
+DB_FILE_NAME = 'database/test.db'
+LOCAL_DB_FILE_PATH = '/tmp/test.db'
+
+def download_db_file():
+    client = storage.Client()
+    bucket = client.bucket(BUCKET_NAME)
+    blob = bucket.blob(DB_FILE_NAME)
+    blob.download_to_filename(LOCAL_DB_FILE_PATH)
+
+download_db_file()
+
+DATABASE_URL = f"sqlite:///{LOCAL_DB_FILE_PATH}"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @app.get("/")
 async def root():
@@ -72,7 +90,7 @@ class CohortDataSchema(BaseModel):
 
 @app.get("/data", response_model=List[CohortDataSchema])
 async def get_all_data():
-    session = Session(engine)
+    session = SessionLocal()
     try:
         data = session.query(CohortData).all()
         return [CohortDataSchema.model_validate(item) for item in data]
@@ -83,36 +101,3 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
     
-# def read_csv() -> pd.DataFrame:
-#     if os.path.exists(CSV_FILE_PATH):
-#         return pd.read_csv(CSV_FILE_PATH)
-#     else:
-#         return pd.DataFrame(columns=[field for field in GeneticData.__annotations__])
-
-# @app.get("/data", response_model=List[GeneticData], operation_id="get_all_data")
-# def get_data():
-#     try:
-#         df = read_csv()
-#         return df.to_dict(orient="records")
-#     except Exception as e:
-#         logging.error(f"Error reading CSV: {e}")
-#         raise HTTPException(status_code=500, detail="Error reading data")
-
-# @app.get("/data/{study_code}", response_model=GeneticData, operation_id="get_data_by_study_code")
-# def get_data_by_study_code(study_code: str):
-#     try:
-#         df = read_csv()
-#         # Debugging print statements
-#         print(f"Available study codes: {df['study_code'].values}")
-#         print(f"Looking for study_code: '{study_code}'")
-#         if study_code in df['study_code'].values:
-#             record = df[df['study_code'] == study_code].to_dict(orient='records')[0]
-#             return record
-#         raise HTTPException(status_code=404, detail="Data not found")
-#     except Exception as e:
-#         logging.error(f"Error processing request: {e}")
-#         raise HTTPException(status_code=500, detail="Internal Server Error")
-
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8000)

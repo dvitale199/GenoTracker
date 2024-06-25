@@ -1,6 +1,9 @@
 # Data
 data
 
+# Secrets
+.devcontainer/gp2-release-terra-e65c1b67820b.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
