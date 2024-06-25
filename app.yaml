@@ -1,0 +1,9 @@
+service: genotracker
+runtime: custom
+env: flex
+
+env_variables:
+  BUCKET_NAME: 'genotracker'
+  DB_FILE_NAME: 'database/test.db'
+  LOCAL_DB_FILE_PATH: '/tmp/test.db'
+
