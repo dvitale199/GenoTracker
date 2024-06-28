@@ -77,6 +77,7 @@ class CohortData(Base):
     cah_other = Column(Integer, nullable=True)
     total = Column(Integer, nullable=True)
     new = Column(Boolean, default=True)
-    date_last_update = Column(Date, default=datetime.today()) 
+    date_last_update = Column(Date, default=datetime.today())
+    compliance = Column(Boolean, default=False)
 
 Base.metadata.create_all(bind=engine)

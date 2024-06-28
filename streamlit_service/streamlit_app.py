@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import requests
+import urllib3
+
+# urllib3.disable_warnings(category = urllib3.exceptions.InsecureRequestWarning)
 
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
@@ -8,8 +11,10 @@ API_URL = "https://genotracker-dot-gp2-release-terra.uc.r.appspot.com/data"
 
 @st.cache_data
 def fetch_data():
+    # response = requests.get(API_URL, verify=False)
     response = requests.get(API_URL)
     if response.status_code == 200:
+        print(response)
         return pd.DataFrame(response.json())
     else:
         st.error("Failed to fetch data from API")
@@ -39,18 +44,6 @@ bar_plot_columns = [
 
 if not df.empty:
     st.write("### Data Exploration")
-
-    # st.write("#### Summary Statistics")
-    # st.write(df.describe())
-
-    # columns = st.multiselect("Select columns to display", list(df.columns), list(df.columns))
-    # if columns:
-    #     st.write("#### Selected Columns Data")
-    #     st.dataframe(df[columns])
-    # else:
-    #     st.write("No columns selected")
-
-    # st.write("### Plotting Options")
 
     selected_column = st.selectbox("Select column to plot", bar_plot_columns)
 

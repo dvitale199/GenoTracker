@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy.orm import Session
-from database import engine, CohortData
-from crud import update_date_last_update
+from database.database import engine, CohortData
+from database.crud import update_date_last_update
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
@@ -75,7 +75,9 @@ def load_data(file_path):
             cah_control=row.get('cah_control', 0),
             cah_other=row.get('cah_other', 0),
             total=row.get('total', 0),
-            new=True
+            new=True,
+            compliance=False
+
         )
         session.add(genetic_data)
         update_date_last_update(row['study_code'])
