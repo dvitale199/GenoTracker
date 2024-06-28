@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import date
 import pandas as pd
-from load_data import CohortData
+from database.load_data import CohortData
 
 app = FastAPI()
 

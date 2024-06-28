@@ -1,4 +1,4 @@
-service: genotracker
+service: genotracker-api
 runtime: custom
 env: flex
 

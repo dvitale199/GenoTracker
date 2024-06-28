@@ -1,0 +1,6 @@
+service: genotracker-streamlit
+runtime: custom
+env: flex
+
+env_variables:
+  API_URL: 'https://your-fastapi-service-url/data'
