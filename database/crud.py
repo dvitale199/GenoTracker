@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from database import engine, CohortData
+from .database import engine, CohortData
 from datetime import datetime
 
 

@@ -18,7 +18,8 @@ COPY . /app
 
 # Install dependencies from requirements.txt
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+    pip install --no-cache-dir -r /app/requirements.txt \
+    pip install --no-cache-dir .
 
 EXPOSE 8080
 

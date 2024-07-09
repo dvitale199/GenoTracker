@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy.orm import Session
-from database.database import engine, CohortData
-from database.crud import update_date_last_update
+from .database import engine, CohortData
+from .crud import update_date_last_update
 
 def load_data(file_path):
     df = pd.read_csv(file_path)
