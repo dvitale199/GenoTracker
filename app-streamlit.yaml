@@ -4,3 +4,6 @@ env: flex
 
 env_variables:
   API_URL: 'https://genotracker-api-dot-gp2-release-terra.uc.r.appspot.com/data'
+
+runtime_config:
+  dockerfile: streamlit_service/Dockerfile

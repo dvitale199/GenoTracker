@@ -1,4 +1,5 @@
 import os
+import logging
 from fastapi import FastAPI
 from google.cloud import storage
 from sqlalchemy import create_engine
@@ -15,11 +16,19 @@ BUCKET_NAME = os.getenv('BUCKET_NAME', 'genotracker')
 DB_FILE_NAME = os.getenv('DB_FILE_NAME', 'database/test.db')
 LOCAL_DB_FILE_PATH = os.getenv('LOCAL_DB_FILE_PATH', '/tmp/test.db')
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 def download_db_file():
+    logger.debug(f"Downloading database file from bucket '{BUCKET_NAME}' with file name '{DB_FILE_NAME}'")
     client = storage.Client()
     bucket = client.bucket(BUCKET_NAME)
     blob = bucket.blob(DB_FILE_NAME)
-    blob.download_to_filename(LOCAL_DB_FILE_PATH)
+    try:
+        blob.download_to_filename(LOCAL_DB_FILE_PATH)
+        logger.debug(f"Database file downloaded successfully to '{LOCAL_DB_FILE_PATH}'")
+    except Exception as e:
+        logger.error(f"Error downloading database file: {e}")
 
 download_db_file()
 
@@ -84,6 +93,7 @@ class CohortDataSchema(BaseModel):
     total: Optional[int] = 0
     new: Optional[bool] = True
     date_last_update: Optional[date] = Field(default_factory=date.today)
+    compliance: Optional[bool] = False
 
     class Config:
         orm_mode = True
