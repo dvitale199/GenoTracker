@@ -8,18 +8,14 @@ RUN apt-get update -y && \
 RUN adduser --disabled-password --gecos "" gtuser
 
 WORKDIR /app
-
-RUN apt-get update -y && \
-    apt-get install -y git && \
-    rm -rf /var/lib/apt/lists/*
     
-# Copy the application code to /app
-COPY . /app
+COPY . /app/
 
-# Install dependencies from requirements.txt
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8080
+# ENV PYTHONPATH=/app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# EXPOSE 8080
+
+# CMD ["uvicorn", "fastapi_service.main:app", "--host", "0.0.0.0", "--port", "8080"]

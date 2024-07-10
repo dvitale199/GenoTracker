@@ -7,3 +7,6 @@ __pycache__/
 .venv/
 venv/
 .devcontainer/
+database/__pycache__
+fastapi_service/__pycache__
+streamlit_service/__pycache__

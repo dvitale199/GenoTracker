@@ -1,5 +1,8 @@
 # Data
 data
+database/__pycache__
+fastapi_service/__pycache__
+streamlit_service/__pycache__
 
 # Secrets
 .devcontainer/gp2-release-terra-e65c1b67820b.json
