@@ -1,25 +1,38 @@
 import streamlit as st
 import pandas as pd
 import requests
-import urllib3
+# import urllib3
 
 # urllib3.disable_warnings(category = urllib3.exceptions.InsecureRequestWarning)
 
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
 # API_URL = "https://genotracker-dot-gp2-release-terra.uc.r.appspot.com/data"
-API_URL = "http://0.0.0.0:8080"
+# API_URL = "http://0.0.0.0:8080/data"
+API_URL = "http://fastapi:8080/data"
 
 @st.cache_data
-def fetch_data():
-    # response = requests.get(API_URL, verify=False)
-    response = requests.get(API_URL)
-    if response.status_code == 200:
-        print(response)
-        return pd.DataFrame(response.json())
-    else:
-        st.error("Failed to fetch data from API")
-        return pd.DataFrame()
+def fetch_data(from_gcs: bool = True):
+    params = {"from_gcs": from_gcs}
+    try:
+        response = requests.get(API_URL, params=params)
+        response.raise_for_status()
+        data = response.json()
+        # st.write("API Response:", data)
+        
+        if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
+            df = pd.DataFrame(data)
+        else:
+            st.error("Unexpected data format received from the API")
+            df = pd.DataFrame()
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch data from API: {e}")
+        df = pd.DataFrame()
+    except ValueError as e:
+        st.error(f"Error converting data to DataFrame: {e}")
+        df = pd.DataFrame()
+    
+    return df
 
 st.title("GenoTracker Data Viewer")
 

@@ -1,44 +1,6 @@
-import os
-import logging
-from fastapi import FastAPI
-from google.cloud import storage
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from typing import Optional
 from pydantic import BaseModel, Field
-from typing import List, Optional
 from datetime import date
-import pandas as pd
-from .database.load_data import CohortData
-
-app = FastAPI()
-
-BUCKET_NAME = os.getenv('BUCKET_NAME', 'genotracker')
-DB_FILE_NAME = os.getenv('DB_FILE_NAME', 'database/test.db')
-LOCAL_DB_FILE_PATH = os.getenv('LOCAL_DB_FILE_PATH', '/tmp/test.db')
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
-def download_db_file():
-    logger.debug(f"Downloading database file from bucket '{BUCKET_NAME}' with file name '{DB_FILE_NAME}'")
-    client = storage.Client()
-    bucket = client.bucket(BUCKET_NAME)
-    blob = bucket.blob(DB_FILE_NAME)
-    try:
-        blob.download_to_filename(LOCAL_DB_FILE_PATH)
-        logger.debug(f"Database file downloaded successfully to '{LOCAL_DB_FILE_PATH}'")
-    except Exception as e:
-        logger.error(f"Error downloading database file: {e}")
-
-download_db_file()
-
-DATABASE_URL = f"sqlite:///{LOCAL_DB_FILE_PATH}"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-@app.get("/")
-async def root():
-    return "Welcome to GenoTracker"
 
 class CohortDataSchema(BaseModel):
     study_code: Optional[str] = ''
@@ -94,17 +56,3 @@ class CohortDataSchema(BaseModel):
     new: Optional[bool] = True
     date_last_update: Optional[date] = Field(default_factory=date.today)
     compliance: Optional[bool] = False
-
-    class Config:
-        orm_mode = True
-        from_attributes = True
-
-@app.get("/data", response_model=List[CohortDataSchema])
-async def get_all_data():
-    session = SessionLocal()
-    try:
-        data = session.query(CohortData).all()
-        return [CohortDataSchema.model_validate(item) for item in data]
-    finally:
-        session.close()
-    
