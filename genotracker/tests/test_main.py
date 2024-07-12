@@ -5,17 +5,13 @@ client = TestClient(app)
 
 def test_read_data():
     response = client.get("/data")
-    assert response.status_code == 200
+    assert response.status_code == 200    
     
     data = response.json()
     
-    # Check that the response is a list
     assert isinstance(data, list)
-    
-    # Check that the list is not empty
     assert len(data) > 0
-    
-    # Check the structure of the first item
+
     first_item = data[0]
     expected_keys = {
         'study_code', 'monogenic_complex_mixed', 'city', 'geographic_locality',

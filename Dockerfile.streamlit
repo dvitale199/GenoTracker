@@ -1,24 +1,19 @@
-# Use the official Python image.
-# https://hub.docker.com/_/python
 FROM python:3.11-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy only the pyproject.toml and poetry.lock to leverage Docker cache
 COPY pyproject.toml poetry.lock /app/
 
-# Install Poetry
 RUN pip install poetry
 
-# Install project dependencies
-RUN poetry install --no-root --no-dev
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root --no-dev
 
-# Copy the rest of the application code
 COPY . /app
 
-# Expose the port Streamlit runs on
+COPY scripts/wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 EXPOSE 8501
 
-# Run the Streamlit app
-CMD ["poetry", "run", "streamlit", "run", "genotracker/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["wait-for-it.sh", "fastapi:8080", "--", "streamlit", "run", "genotracker/frontend/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]

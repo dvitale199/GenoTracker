@@ -8,7 +8,8 @@ import urllib3
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
 # API_URL = "https://genotracker-dot-gp2-release-terra.uc.r.appspot.com/data"
-API_URL = "http://0.0.0.0:8080/data"
+# API_URL = "http://0.0.0.0:8080/data"
+API_URL = "http://fastapi:8080/data"
 
 @st.cache_data
 def fetch_data():
