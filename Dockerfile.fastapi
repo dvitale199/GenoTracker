@@ -11,6 +11,8 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /app
 
+ENV GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/gcloud-service-account
+
 EXPOSE 8000
 
 CMD ["uvicorn", "genotracker.main:app", "--host", "0.0.0.0", "--port", "8080"]

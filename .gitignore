@@ -1,11 +1,9 @@
 # Data
 data
-database/__pycache__
-fastapi_service/__pycache__
-streamlit_service/__pycache__
 
 # Secrets
-.devcontainer/gp2-release-terra-e65c1b67820b.json
+secrets
+secrets/gp2-release-terra-e65c1b67820b.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -162,7 +160,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
+WORM
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

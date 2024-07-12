@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
-import urllib3
+# import urllib3
 
 # urllib3.disable_warnings(category = urllib3.exceptions.InsecureRequestWarning)
 
@@ -12,14 +12,13 @@ st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 API_URL = "http://fastapi:8080/data"
 
 @st.cache_data
-def fetch_data():
+def fetch_data(from_gcs: bool = True):
+    params = {"from_gcs": from_gcs}
     try:
-        response = requests.get(API_URL)
+        response = requests.get(API_URL, params=params)
         response.raise_for_status()
         data = response.json()
-        
-        # if isinstance(data, dict):
-        #     data = data.get("your_list_key", [])
+        # st.write("API Response:", data)
         
         if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
             df = pd.DataFrame(data)

@@ -1,11 +1,19 @@
 import pandas as pd
-from typing import List
+from typing import List, Optional
+from google.cloud import storage
+import io
 from genotracker.models.data_models import CohortDataSchema
 
-def load_cohort_data_from_csv(file_path: str) -> List[CohortDataSchema]:
-    df = pd.read_csv(file_path)
+def load_cohort_data_from_csv(file_path: str, from_gcs: Optional[bool] = False, bucket_name: Optional[str] = None) -> List[CohortDataSchema]:
+    if from_gcs and bucket_name:
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(file_path)
+        data = blob.download_as_string()
+        df = pd.read_csv(io.BytesIO(data))
+    else:
+        df = pd.read_csv(file_path)
     
-    # Fill NaN values with appropriate defaults
     df.fillna({
         'study_code': '',
         'monogenic_complex_mixed': '',

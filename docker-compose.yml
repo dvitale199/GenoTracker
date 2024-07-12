@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile.fastapi
     ports:
       - "8080:8080"
+    secrets:
+      - gcloud-service-account
     networks:
       - genotracker-network
 
@@ -18,8 +20,14 @@ services:
       - "8501:8501"
     depends_on:
       - fastapi
+    secrets:
+      - gcloud-service-account
     networks:
       - genotracker-network
+
+secrets:
+  gcloud-service-account:
+    file: ./secrets/gp2-release-terra-e65c1b67820b.json
 
 networks:
   genotracker-network:

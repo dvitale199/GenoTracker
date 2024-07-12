@@ -2,7 +2,7 @@
 # deploy using `gcloud app deploy`.
 .secrets/
 .git
-__pycache__/
+__pycache__
 *.pyc
 .venv/
 venv/
@@ -10,3 +10,4 @@ venv/
 database/__pycache__
 fastapi_service/__pycache__
 streamlit_service/__pycache__
+secrets/
