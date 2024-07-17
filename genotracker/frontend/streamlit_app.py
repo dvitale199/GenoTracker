@@ -7,9 +7,7 @@ import requests
 
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
-# API_URL = "https://genotracker-dot-gp2-release-terra.uc.r.appspot.com/data"
-# API_URL = "http://0.0.0.0:8080/data"
-API_URL = "http://fastapi:8080/data"
+API_URL = "https://genotracker-fastapi-3wsqie35cq-uc.a.run.app/data"
 
 @st.cache_data
 def fetch_data(from_gcs: bool = True):
@@ -37,7 +35,7 @@ def fetch_data(from_gcs: bool = True):
 st.title("GenoTracker Data Viewer")
 
 df = fetch_data()
-
+print(df)
 if not df.empty:
     st.write("### Data from GenoTracker API")
     st.dataframe(df)

@@ -13,7 +13,7 @@ async def root():
     return "Welcome to GenoTracker"
 
 @router.get("/data", response_model=List[CohortDataSchema])
-def get_cohort_data(from_gcs: bool = False):
+def get_cohort_data(from_gcs: bool = True):
     try:
         if from_gcs:
             bucket_name = "genotracker"
