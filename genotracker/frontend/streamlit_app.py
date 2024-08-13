@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
+from google.cloud import secretmanager
 # import urllib3
 
 # urllib3.disable_warnings(category = urllib3.exceptions.InsecureRequestWarning)
@@ -9,14 +10,22 @@ st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
 API_URL = "https://genotracker-fastapi-3wsqie35cq-uc.a.run.app/data"
 
+def access_secret_version():
+    client = secretmanager.SecretManagerServiceClient()
+    secret_name = "projects/776926281950/secrets/genotracker-api-key/versions/1"
+    response = client.access_secret_version(name=secret_name)
+    return response.payload.data.decode("UTF-8")
+
+API_KEY = access_secret_version()
+
 @st.cache_data
 def fetch_data(from_gcs: bool = True):
     params = {"from_gcs": from_gcs}
+    headers = {"X-API-Key": API_KEY}
     try:
-        response = requests.get(API_URL, params=params)
+        response = requests.get(API_URL, params=params, headers=headers)
         response.raise_for_status()
         data = response.json()
-        # st.write("API Response:", data)
         
         if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
             df = pd.DataFrame(data)
@@ -35,7 +44,7 @@ def fetch_data(from_gcs: bool = True):
 st.title("GenoTracker Data Viewer")
 
 df = fetch_data()
-print(df)
+
 if not df.empty:
     st.write("### Data from GenoTracker API")
     st.dataframe(df)
