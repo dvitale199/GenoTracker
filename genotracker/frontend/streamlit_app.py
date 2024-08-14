@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 from google.cloud import secretmanager
-# import urllib3
-
-# urllib3.disable_warnings(category = urllib3.exceptions.InsecureRequestWarning)
+from datetime import datetime
 
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
@@ -18,8 +16,17 @@ def access_secret_version():
 
 API_KEY = access_secret_version()
 
-@st.cache_data
-def fetch_data(from_gcs: bool = True):
+def get_last_modified_time():
+    headers = {"X-API-Key": API_KEY}
+    response = requests.head(API_URL, headers=headers)
+    if response.status_code == 200:
+        last_modified_str = response.headers.get("Last-Modified")
+        if last_modified_str:
+            return datetime.strptime(last_modified_str, "%a, %d %b %Y %H:%M:%S GMT")
+    return datetime.now()
+
+@st.cache_data(show_spinner=False)
+def fetch_data(from_gcs: bool = True, last_modified: datetime = None):
     params = {"from_gcs": from_gcs}
     headers = {"X-API-Key": API_KEY}
     try:
@@ -43,7 +50,9 @@ def fetch_data(from_gcs: bool = True):
 
 st.title("GenoTracker Data Viewer")
 
-df = fetch_data()
+# Get the last modified time to use as a cache buster
+last_modified = get_last_modified_time()
+df = fetch_data(last_modified=last_modified)
 
 if not df.empty:
     st.write("### Data from GenoTracker API")
