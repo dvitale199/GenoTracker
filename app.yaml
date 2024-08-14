@@ -1,0 +1,4 @@
+service: genotracker
+runtime: custom
+env: flex
+service_account: genotracker@gp2-release-terra.iam.gserviceaccount.com
