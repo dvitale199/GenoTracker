@@ -5,8 +5,10 @@ from datetime import date
 class CohortDataSchema(BaseModel):
     study_code: Optional[str] = ''
     monogenic_complex_mixed: Optional[str] = ''
+    institution: Optional[str] = ''
     city: Optional[str] = ''
-    geographic_locality: Optional[str] = ''
+    location: Optional[str] = ''
+    territory: Optional[str] = ''
     n_dna_samples_attempted: Optional[int] = 0
     total_qc_pass: Optional[int] = 0
     callrate_fails: Optional[int] = 0
@@ -17,6 +19,7 @@ class CohortDataSchema(BaseModel):
     imputation_panel: Optional[str] = ''
     imputation_complete: Optional[bool] = False
     genotypes_shareable: Optional[bool] = False
+    shared_to_amppd: Optional[bool] = False
     gdpr: Optional[bool] = False
     site: Optional[str] = ''
     afr_case: Optional[int] = 0
@@ -53,6 +56,6 @@ class CohortDataSchema(BaseModel):
     cah_control: Optional[int] = 0
     cah_other: Optional[int] = 0
     total: Optional[int] = 0
-    new: Optional[bool] = True
+    new: Optional[bool] = False
     date_last_update: Optional[date] = Field(default_factory=date.today)
     compliance: Optional[bool] = False
