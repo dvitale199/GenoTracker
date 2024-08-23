@@ -54,6 +54,22 @@ def get_cohort_data(
         logger.error(f"Error loading cohort data: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.head("/data")
+def head_cohort_data(
+    response: Response,
+    from_gcs: bool = True, 
+    api_key: str = Depends(get_api_key)):
+    try:
+        if from_gcs:
+            bucket_name = "genotracker"
+            file_path = "data/genotracker_clean.csv"
+            last_modified = get_gcs_file_last_modified(bucket_name, file_path)
+            response.headers["Last-Modified"] = last_modified.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        return Response(status_code=200)
+    except Exception as e:
+        logger.error(f"Error processing HEAD request: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 def get_gcs_file_last_modified(bucket_name: str, file_path: str):
     """
     Get the last modified time of a file in Google Cloud Storage.

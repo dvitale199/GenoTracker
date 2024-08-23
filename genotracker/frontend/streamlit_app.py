@@ -7,6 +7,8 @@ from datetime import datetime
 st.set_page_config(page_title="GenoTracker Data Viewer", layout="wide")
 
 API_URL = "https://genotracker-fastapi-3wsqie35cq-uc.a.run.app/data"
+#debug
+# API_URL = "http://0.0.0.0:8080/data"
 
 def access_secret_version():
     client = secretmanager.SecretManagerServiceClient()
@@ -34,10 +36,17 @@ def fetch_data(from_gcs: bool = True, last_modified: datetime = None):
         response.raise_for_status()
         data = response.json()
         
-        if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
-            df = pd.DataFrame(data)
+        #debug
+        # st.write("Raw API Data:", data)
+        
+        if isinstance(data, list):
+            if len(data) > 0 and isinstance(data[0], dict):
+                df = pd.DataFrame(data)
+            else:
+                st.error(f"Unexpected data format: list contains non-dict items or is empty.")
+                df = pd.DataFrame()
         else:
-            st.error("Unexpected data format received from the API")
+            st.error(f"Unexpected data type received from the API: {type(data)}")
             df = pd.DataFrame()
     except requests.exceptions.RequestException as e:
         st.error(f"Failed to fetch data from API: {e}")

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/gp2-release-terra/genotools/genotracker-fastapi -f Dockerfile.fastapi .
-docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/gp2-release-terra/genotools/genotracker-streamlit -f Dockerfile.streamlit .
+# docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/gp2-release-terra/genotools/genotracker-streamlit -f Dockerfile.streamlit .
 
 docker push us-central1-docker.pkg.dev/gp2-release-terra/genotools/genotracker-fastapi
 # docker push us-central1-docker.pkg.dev/gp2-release-terra/genotools/genotracker-streamlit

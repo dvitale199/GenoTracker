@@ -8,7 +8,7 @@ class CohortDataSchema(BaseModel):
     institution: Optional[str] = ''
     city: Optional[str] = ''
     location: Optional[str] = ''
-    territory: Optional[str] = ''
+    region: Optional[str] = ''
     n_dna_samples_attempted: Optional[int] = 0
     total_qc_pass: Optional[int] = 0
     callrate_fails: Optional[int] = 0
